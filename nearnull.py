@@ -1,4 +1,4 @@
-import minst
+import mnist
 import numpy as np
 import multiprocessing as mp
 import img2np
@@ -10,17 +10,17 @@ class NearNull:
         self.nulls = np.concatenate(nulls, axis = 1)
         
     def classify(self, images):
-        N = len(images)//minst.PIXEL_COUNT
+        N = len(images)//mnist.PIXEL_COUNT
         def label(ofs):
-            M = np.array(images[ofs:ofs + minst.PIXEL_COUNT]).reshape((1, minst.PIXEL_COUNT))
+            M = np.array(images[ofs:ofs + mnist.PIXEL_COUNT]).reshape((1, mnist.PIXEL_COUNT))
             M = np.dot(M, self.nulls)
             M = np.abs(M)
             return np.argmin(M, axis = 1)
-        return [label(i*minst.PIXEL_COUNT) for i in range(N)]
+        return [label(i*mnist.PIXEL_COUNT) for i in range(N)]
 
 def train(images, labels):
     procs = mp.Pool(processes = THREADS)
-    Ms = procs.map(img2np.Img2Np(images, labels).convert, range(minst.LABEL_COUNT))
+    Ms = procs.map(img2np.Img2Np(images, labels).convert, range(mnist.LABEL_COUNT))
     def null(label):
         O = np.concatenate([o for l, o in enumerate(Ms) if l != label], axis = 0)
         M = Ms[label]
@@ -29,6 +29,6 @@ def train(images, labels):
         B = np.dot(O, Vh.T)
         A = np.count_nonzero(np.abs(A) < 1e-3, axis = 0)
         B = np.count_nonzero(np.abs(B) > 1e-3, axis = 0)
-        last = np.argmax(B/(minst.LABEL_COUNT - 1) + A)
-        return Vh.T[:, last].reshape((minst.PIXEL_COUNT, 1))
-    return NearNull([null(label) for label in range(minst.LABEL_COUNT)])
+        last = np.argmax(B/(mnist.LABEL_COUNT - 1) + A)
+        return Vh.T[:, last].reshape((mnist.PIXEL_COUNT, 1))
+    return NearNull([null(label) for label in range(mnist.LABEL_COUNT)])

@@ -1,5 +1,5 @@
 import numpy as np
-import minst
+import mnist
 
 class Img2Np:
     def __init__(self, images, labels):
@@ -7,5 +7,5 @@ class Img2Np:
         self.labels = labels
         
     def convert(self, label):
-        image = [f for i, f in enumerate(self.images) if label == self.labels[i//minst.PIXEL_COUNT]]
-        return np.array(image).reshape((len(image)//minst.PIXEL_COUNT, minst.PIXEL_COUNT))
+        image = [f for i, f in enumerate(self.images) if label == self.labels[i//mnist.PIXEL_COUNT]]
+        return np.array(image).reshape((len(image)//mnist.PIXEL_COUNT, mnist.PIXEL_COUNT))

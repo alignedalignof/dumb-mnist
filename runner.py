@@ -1,5 +1,5 @@
 import sys
-import minst
+import mnist
 import least_squares
 import mindif
 import pca
@@ -12,14 +12,14 @@ def get_file_data(img, lbl):
     
     print("Unpacking", img, lbl)
     with gzip.open(img, "rb") as images, gzip.open(lbl, "rb") as labels:
-        if next_u32(images) != minst.IMAGE_MAGIC:
+        if next_u32(images) != mnist.IMAGE_MAGIC:
             raise ValueError(img, "invalid magic")
         img_count = next_u32(images)
         h = next_u32(images)
         w = next_u32(images)
-        if w != h or w != minst.WIDTH:
+        if w != h or w != mnist.WIDTH:
             raise ValueError("Invalid image dimensions", w, h)
-        if next_u32(labels) != minst.LABEL_MAGIC:
+        if next_u32(labels) != mnist.LABEL_MAGIC:
             raise ValueError(lbl, "invalid magic")
         if img_count != next_u32(labels):
             raise ValueError(lbl, "invalid label count")
@@ -50,15 +50,15 @@ def evaluate(module, images, labels, test_images, test_labels):
     if len(test_labels) != len(evaluation):
         raise ValueError("Invalid evaluation size")
     
-    totals = [i for i in range(minst.LABEL_COUNT)]
-    hits = [i for i in range(minst.LABEL_COUNT)]
+    totals = [i for i in range(mnist.LABEL_COUNT)]
+    hits = [i for i in range(mnist.LABEL_COUNT)]
     for e, a in zip(test_labels, evaluation):
         totals[e] += 1
         if e == a:
             hits[e] += 1
 
     print("{0:.2f}% hit".format(100.*sum(hits)/sum(totals)))
-    for t, h, i in zip(totals, hits, range(minst.LABEL_COUNT)):
+    for t, h, i in zip(totals, hits, range(mnist.LABEL_COUNT)):
         print("{3}: {0}/{1} ({2:.2f}%)".format(h, t, 100.*h/t, i))
     print()
     
@@ -82,6 +82,6 @@ if __name__ == "__main__":
     evaluate(nearnull, images, labels, test_images, test_labels)
             
     N = 100
-    evaluate(mindif, images, labels, test_images[:N*minst.PIXEL_COUNT], test_labels[:N])
+    evaluate(mindif, images, labels, test_images[:N*mnist.PIXEL_COUNT], test_labels[:N])
     N = 1000
-    evaluate(mindif, images[:N*minst.PIXEL_COUNT], labels[:N], test_images, test_labels)
+    evaluate(mindif, images[:N*mnist.PIXEL_COUNT], labels[:N], test_images, test_labels)
