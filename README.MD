@@ -1,6 +1,6 @@
 Dumb MNIST
 ======================
-Classifier algorithms for MNIST like images wirtten in python-numpy
+Classifier algorithms for MNIST like images written in python-numpy
 
 Usage
 -----
