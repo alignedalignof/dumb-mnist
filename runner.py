@@ -44,12 +44,12 @@ class Timer:
 
 
 def evaluate(module, images, labels, test_images, test_labels, *args):
-    print(module.__name__, "training", len(labels), "images...", end="")
+    print(module.__name__, "training", len(labels), "images...", end="", flush=True)
     with Timer() as train_timer:
         classifier = module.train(images, labels)
-    print("{0:.2f} s, {1:.2f} images/s".format(train_timer.dt, len(labels) / train_timer.dt), end="")
+    print("{0:.2f} s, {1:.2f} images/s".format(train_timer.dt, len(labels) / train_timer.dt), end="", flush=True)
 
-    print("; classifying", len(test_labels), "images...", end="")
+    print("; classifying", len(test_labels), "images...", end="", flush=True)
     with Timer() as class_timer:
         evaluation = classifier.classify(test_images)
     print(" {0:.2f} s, {1:.2f} images/s".format(class_timer.dt, len(test_labels) / class_timer.dt))
