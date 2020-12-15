@@ -8,6 +8,7 @@ from classifiers import least_squares
 from classifiers import mindif
 from classifiers import pca
 from classifiers import nearnull
+from classifiers import relu
 
 def get_file_data(img, lbl):
     next_u32 = lambda file: int.from_bytes(file.read(4), "big")
@@ -55,8 +56,8 @@ def evaluate(module, images, labels, test_images, test_labels, *args):
     if len(test_labels) != len(evaluation):
         raise ValueError("Invalid evaluation size")
 
-    totals = [i for i in range(mnist.LABEL_COUNT)]
-    hits = [i for i in range(mnist.LABEL_COUNT)]
+    totals = [0 for i in range(mnist.LABEL_COUNT)]
+    hits = [0 for i in range(mnist.LABEL_COUNT)]
     for e, a in zip(test_labels, evaluation):
         totals[e] += 1
         if e == a:
@@ -82,7 +83,7 @@ if __name__ == "__main__":
 
     images, labels = get_file_data(train_img, train_lbl)
     test_images, test_labels = get_file_data(test_img, test_lbl)
-
+    
     evaluate(least_squares, images, labels, test_images, test_labels)
     evaluate(pca, images, labels, test_images, test_labels)
     evaluate(nearnull, images, labels, test_images, test_labels)
@@ -93,3 +94,4 @@ if __name__ == "__main__":
     evaluate(mindif, images[:N * mnist.PIXEL_COUNT], labels[:N], test_images, test_labels)
     N = 10000
     evaluate(nn, images[:N * mnist.PIXEL_COUNT], labels[:N], test_images, test_labels)
+    evaluate(relu, images, labels, test_images, test_labels)
